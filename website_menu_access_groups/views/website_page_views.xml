@@ -45,7 +45,7 @@
 
 <template id="submenu_inherit" name="Submenu Access Groups" inherit_id="website.submenu">
 
-    <xpath expr="//li[@t-if='not submenu.child_id']" position="replace">
+    <xpath expr="//li[@t-if='submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)']" position="replace">
 
         <t t-set="group_menu_access" t-value="'No'"/>
         <t t-if="len(submenu.sudo().group_ids) == 0">
@@ -59,7 +59,7 @@
             </t>
         </t>
 
-        <li t-if="group_menu_access == 'Yes' and not submenu.child_id" t-att-class="'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None">
+        <li t-if="group_menu_access == 'Yes' and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None">
             <a t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
                 <span t-field="submenu.name"/>
             </a>
